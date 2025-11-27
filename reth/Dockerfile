@@ -39,7 +39,7 @@ RUN mkdir -p /var/log/supervisor
 WORKDIR /app
 
 COPY --from=op /app/op-node/bin/op-node ./
-COPY ../base-node/target/maxperf/base-reth-node ./
+COPY base-reth-node ./
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./reth/reth-entrypoint ./execution-entrypoint
 COPY op-node-entrypoint .
