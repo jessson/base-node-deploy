@@ -10,6 +10,7 @@ METRICS_PORT="${METRICS_PORT:-6060}"
 DISCOVERY_PORT="${DISCOVERY_PORT:-30303}"
 P2P_PORT="${P2P_PORT:-30303}"
 ADDITIONAL_ARGS=""
+RETH_LOG_FILE="${RETH_LOG_FILE:-/data/reth.log}"
 BINARY="./base-reth-node"
 
 if [[ -z "${RETH_CHAIN:-}" ]]; then
@@ -36,16 +37,18 @@ echo "$OP_NODE_L2_ENGINE_AUTH_RAW" > "$OP_NODE_L2_ENGINE_AUTH"
 
 exec "$BINARY" node \
   -vvv \
+  --full \
   --datadir="$RETH_DATA_DIR" \
-  --log.stdout.format json \
+  --log.file.path="$RETH_LOG_FILE" \
+  --log.file.format json \
   --ws \
   --ws.origins="*" \
-  --ws.addr=0.0.0.0 \
+  --ws.addr=127.0.0.1 \
   --ws.port="$WS_PORT" \
   --ws.api=web3,debug,eth,net,txpool \
   --http \
   --http.corsdomain="*" \
-  --http.addr=0.0.0.0 \
+  --http.addr=127.0.0.1 \
   --http.port="$RPC_PORT" \
   --http.api=web3,debug,eth,net,txpool,miner \
   --ipcpath="$IPC_PATH" \
@@ -53,7 +56,7 @@ exec "$BINARY" node \
   --authrpc.port="$AUTHRPC_PORT" \
   --authrpc.jwtsecret="$OP_NODE_L2_ENGINE_AUTH" \
   --metrics=0.0.0.0:"$METRICS_PORT" \
-  --max-outbound-peers=100 \
+  --max-outbound-peers=200 \
   --chain "$RETH_CHAIN" \
   --rollup.sequencer-http="$RETH_SEQUENCER_HTTP" \
   --rollup.disable-tx-pool-gossip \
